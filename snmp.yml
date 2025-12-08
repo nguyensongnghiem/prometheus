@@ -1,0 +1,16 @@
+auths:
+  router_v2_auth:
+    version: 2
+    community: 'your_community' # <-- CẬP NHẬT: Community String của Router
+
+modules:
+  router_inventory:
+    # Lấy tên hệ thống (sysName.0) và Serial (entPhysicalSerialNum)
+    # Lưu ý: Nếu Serial không ra, có thể cần OID riêng của vendor.
+    walk: [1.3.6.1.2.1.1.5, 1.3.6.1.2.1.47.1.1.1.1.11]
+    auth: router_v2_auth
+    
+  router_interfaces:
+    # Lấy thông tin trạng thái Interface
+    walk: [ifName, ifOperStatus]
+    auth: router_v2_auth

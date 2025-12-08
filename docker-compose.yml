@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Dịch vụ 1: SNMP EXPORTER (Translator)
+  snmp-exporter:
+    image: prom/snmp-exporter:latest
+    container_name: snmp-exporter
+    # Sử dụng host network để có thể truy cập NetBox và Router dễ dàng hơn
+    network_mode: "host"
+    volumes:
+      - ./snmp.yml:/etc/snmp_exporter/snmp.yml:ro
+    # Ports không cần thiết khi dùng host network, nhưng giữ lại để minh họa
+    # ports:
+    #   - "9116:9116"
+
+  # Dịch vụ 2: PROMETHEUS (Scraper)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    # Sử dụng host network
+    network_mode: "host"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.listen-address=:9090' # Phải dùng listen-address khi dùng host network
+    # Ports không cần thiết khi dùng host network
+    # ports:
+    #   - "9090:9090"
